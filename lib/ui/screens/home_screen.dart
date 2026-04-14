@@ -150,13 +150,12 @@ class _HomeScreenState extends State<HomeScreen>
         ],
       ),
 
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ── Profile Card ────────────────────────────────────────────────
-            SlideTransition(
+      body: Column(
+        children: [
+          // ── Profile Card (Fixed) ────────────────────────────────────────
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+            child: SlideTransition(
               position: _slideIn,
               child: FadeTransition(
                 opacity: _fadeIn,
@@ -166,30 +165,39 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
               ),
             ),
+          ),
+          SizedBox(height: 20),
+          // ── Scrollable Content ──────────────────────────────────────────
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(20, 28, 20, 100),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // ── Event Terbaru ────────────────────────────────────────
+                  _buildSectionHeader(
+                    'Event Terbaru',
+                    Icons.event_note_rounded,
+                    onSeeAll: () {},
+                  ),
+                  const SizedBox(height: 12),
+                  _buildEventList(),
 
-            const SizedBox(height: 28),
+                  const SizedBox(height: 28),
 
-            // ── Event Terbaru ────────────────────────────────────────────────
-            _buildSectionHeader(
-              'Event Terbaru',
-              Icons.event_note_rounded,
-              onSeeAll: () {},
+                  // ── Berita IT ────────────────────────────────────────────
+                  _buildSectionHeader(
+                    'Berita IT Terkini',
+                    Icons.newspaper_rounded,
+                    onSeeAll: () {},
+                  ),
+                  const SizedBox(height: 12),
+                  _buildNewsList(),
+                ],
+              ),
             ),
-            const SizedBox(height: 12),
-            _buildEventList(),
-
-            const SizedBox(height: 28),
-
-            // ── Berita IT ────────────────────────────────────────────────────
-            _buildSectionHeader(
-              'Berita IT Terkini',
-              Icons.newspaper_rounded,
-              onSeeAll: () {},
-            ),
-            const SizedBox(height: 12),
-            _buildNewsList(),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -408,19 +416,23 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  // ── Event list: horizontal scroll ────────────────────────────────────────
+  // ── Event list: vertical scroll ────────────────────────────────────────
   Widget _buildEventList() {
-    return SizedBox(
-      height: 282,
+    return Skeletonizer(
+      enabled: _isLoading,
+      effect: ShimmerEffect(
+        baseColor: Colors.blue.shade50,
+        highlightColor: Colors.blue.shade100,
+        duration: const Duration(milliseconds: 1000),
+      ),
       child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.only(right: 4),
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.zero,
         itemCount: placeholderEvents.length,
-        separatorBuilder: (_, _s) => const SizedBox(width: 14),
-        itemBuilder: (context, i) => EventCard(
-          event: placeholderEvents[i],
-          onTap: () {},
-        ),
+        separatorBuilder: (_, _s) => const SizedBox(height: 16),
+        itemBuilder: (context, i) =>
+            EventCard(event: placeholderEvents[i], onTap: () {}),
       ),
     );
   }
@@ -434,10 +446,8 @@ class _HomeScreenState extends State<HomeScreen>
         padding: const EdgeInsets.only(right: 4),
         itemCount: placeholderNews.length,
         separatorBuilder: (_, _s) => const SizedBox(width: 12),
-        itemBuilder: (context, i) => NewsCard(
-          news: placeholderNews[i],
-          onTap: () {},
-        ),
+        itemBuilder: (context, i) =>
+            NewsCard(news: placeholderNews[i], onTap: () {}),
       ),
     );
   }
