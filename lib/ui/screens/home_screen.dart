@@ -66,6 +66,7 @@ class _HomeScreenState extends State<HomeScreen>
     super.dispose();
   }
 
+
   void _showProfileSheet() {
     AppLogger.info('Profile sheet opened', 'HomeScreen');
     final user = context.read<AuthViewModel>().currentUser;
