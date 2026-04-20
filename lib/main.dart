@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'logic/auth_viewmodel.dart';
+import 'logic/event_viewmodel.dart';
+import 'logic/materi_viewmodel.dart';
 import 'ui/theme/app_theme.dart';
 import 'ui/screens/splash_screen.dart';
 
@@ -18,7 +20,11 @@ class KedaiApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => AuthViewModel())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthViewModel()),
+        ChangeNotifierProvider(create: (_) => EventViewModel()),
+        ChangeNotifierProvider(create: (_) => MateriViewModel()),
+      ],
       child: MaterialApp(
         title: 'KedaiApp',
         debugShowCheckedModeBanner: false,
